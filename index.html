@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Age & Cosmic Calculator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f5f5f4;
+    --color-background-tertiary: #ece9e4;
+    --color-background-info: #e6f1fb;
+    --color-background-danger: #fcebeb;
+    --color-background-success: #eaf3de;
+    --color-background-warning: #faeeda;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #6b6b6b;
+    --color-text-tertiary: #9b9b9b;
+    --color-text-info: #185fa5;
+    --color-text-danger: #a32d2d;
+    --color-text-success: #3b6d11;
+    --color-text-warning: #854f0b;
+    --color-border-tertiary: rgba(0,0,0,0.1);
+    --color-border-secondary: rgba(0,0,0,0.2);
+    --color-border-primary: rgba(0,0,0,0.35);
+    --color-border-info: #85b7eb;
+    --color-border-danger: #f09595;
+    --color-border-success: #97c459;
+    --color-border-warning: #ef9f27;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-serif: 'DM Serif Display', serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background-primary: #1c1c1b;
+      --color-background-secondary: #262625;
+      --color-background-tertiary: #2c2c2a;
+      --color-background-info: #042c53;
+      --color-background-danger: #501313;
+      --color-background-success: #173404;
+      --color-background-warning: #412402;
+      --color-text-primary: #f0ede8;
+      --color-text-secondary: #a8a59f;
+      --color-text-tertiary: #6b6966;
+      --color-text-info: #85b7eb;
+      --color-text-danger: #f09595;
+      --color-text-success: #97c459;
+      --color-text-warning: #ef9f27;
+      --color-border-tertiary: rgba(255,255,255,0.1);
+      --color-border-secondary: rgba(255,255,255,0.2);
+      --color-border-primary: rgba(255,255,255,0.35);
+      --color-border-info: #185fa5;
+      --color-border-danger: #a32d2d;
+      --color-border-success: #3b6d11;
+      --color-border-warning: #854f0b;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-background-tertiary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--color-background-primary);
+    border-radius: var(--border-radius-xl);
+    border: 0.5px solid var(--color-border-tertiary);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .hdr h1 { font-family: var(--font-serif); font-size: 28px; font-weight: 400; letter-spacing: -0.5px; }
+  .hdr p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; font-weight: 300; }
+  .inp-label { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 8px; display: block; }
+  .date-row { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 10px; }
+  .df { display: flex; flex-direction: column; gap: 5px; }
+  .df label { font-size: 11px; color: var(--color-text-tertiary); letter-spacing: .05em; text-transform: uppercase; }
+  .df input {
+    width: 100%; height: 48px; padding: 0 12px;
+    font-family: var(--font-sans); font-size: 20px; font-weight: 300;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    color: var(--color-text-primary);
+    text-align: center; transition: border-color .15s, background .15s;
+    -moz-appearance: textfield;
+  }
+  .df input::-webkit-outer-spin-button, .df input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .df input:focus { outline: none; border-color: var(--color-border-primary); background: var(--color-background-primary); }
+  .df input.err { border-color: var(--color-border-danger); background: var(--color-background-danger); }
+  .calc-btn {
+    width: 100%; height: 48px; margin-top: 10px;
+    background: var(--color-text-primary); color: var(--color-background-primary);
+    border: none; border-radius: var(--border-radius-md);
+    font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: .04em;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity .15s, transform .1s;
+  }
+  .calc-btn:hover { opacity: .85; }
+  .calc-btn:active { transform: scale(.99); }
+  .err-box { font-size: 13px; color: var(--color-text-danger); padding: 10px 14px; background: var(--color-background-danger); border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-danger); margin-top: 10px; }
+  .section-title { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 10px; }
+  .metrics-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .mc { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .mc .ml { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .mc .mv { font-family: var(--font-serif); font-size: 34px; font-weight: 400; color: var(--color-text-primary); line-height: 1.1; }
+  .mc .ms { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .extras-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .ec { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
+  .ec-icon { width: 34px; height: 34px; border-radius: 50%; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; color: var(--color-text-secondary); }
+  .ec-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .ec-lbl { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .07em; }
+  .ec-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .divider { height: .5px; background: var(--color-border-tertiary); }
+  .bday-bar { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+  .bday-lbl { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .07em; }
+  .bday-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-top: 3px; }
+  .bday-count { font-family: var(--font-serif); font-size: 28px; color: var(--color-text-primary); text-align: right; }
+  .bday-count span { display: block; font-family: var(--font-sans); font-size: 11px; font-weight: 400; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .07em; margin-top: 2px; }
+  .bday-badge { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); border-radius: var(--border-radius-md); padding: 10px 16px; font-size: 14px; color: var(--color-text-success); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .zodiac-hero { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+  .zh-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+  .zh-sym { width: 52px; height: 52px; border-radius: 12px; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+  .zh-info h3 { font-family: var(--font-serif); font-size: 20px; font-weight: 400; }
+  .zh-info p { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+  .zh-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pill { font-size: 12px; padding: 3px 10px; border-radius: 100px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); background: var(--color-background-secondary); }
+  .zh-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .zh-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .875rem 1rem; }
+  .zh-card-lbl { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+  .zh-card-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .zh-card-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .stone-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 14px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+  .stone-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .stone-text { font-size: 13px; color: var(--color-text-primary); }
+  .stone-sub { font-size: 12px; color: var(--color-text-secondary); }
+  .luck-row { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 10px; }
+  .luck-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .75rem 1rem; }
+  .luck-lbl { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+  .luck-vals { display: flex; flex-wrap: wrap; gap: 5px; }
+  .luck-pill { font-size: 13px; font-weight: 500; padding: 3px 10px; border-radius: 100px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-primary); }
+  .compat-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-top: 8px; }
+  .compat-item { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .75rem; text-align: center; }
+  .compat-sign { font-size: 20px; margin-bottom: 4px; }
+  .compat-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+  .compat-level { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .compat-bar { height: 3px; border-radius: 2px; background: var(--color-border-tertiary); margin-top: 6px; overflow: hidden; }
+  .compat-fill { height: 100%; border-radius: 2px; background: var(--color-text-primary); }
+  .horo-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; display: flex; flex-direction: column; gap: 14px; }
+  .horo-loading { display: flex; align-items: center; gap: 10px; color: var(--color-text-secondary); font-size: 14px; }
+  .horo-spin { width: 18px; height: 18px; border: 2px solid var(--color-border-tertiary); border-top-color: var(--color-text-secondary); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .horo-section { display: flex; flex-direction: column; gap: 6px; }
+  .horo-sec-lbl { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-secondary); display: flex; align-items: center; gap: 5px; }
+  .horo-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.65; }
+  .explore-btn { margin-top: 4px; padding: 8px 16px; background: transparent; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-family: var(--font-sans); font-size: 13px; color: var(--color-text-primary); cursor: pointer; transition: background .15s; align-self: flex-start; }
+  .explore-btn:hover { background: var(--color-background-secondary); }
+  #out { display: none; }
+  #out.visible { display: flex; flex-direction: column; gap: 16px; animation: fadeUp .35s ease forwards; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2 class="sr-only">Professional age calculator with cosmic insights</h2>
+
+  <div class="hdr">
+    <h1>Age &amp; Cosmic Calculator</h1>
+    <p>Your age, astrology, and daily horoscope — all from your date of birth.</p>
+  </div>
+
+  <div>
+    <span class="inp-label">Date of birth</span>
+    <div class="date-row">
+      <div class="df"><label for="d">Day</label><input type="number" id="d" min="1" max="31" placeholder="DD"/></div>
+      <div class="df"><label for="m">Month</label><input type="number" id="m" min="1" max="12" placeholder="MM"/></div>
+      <div class="df"><label for="y">Year</label><input type="number" id="y" min="1900" max="2099" placeholder="YYYY"/></div>
+    </div>
+    <button class="calc-btn" onclick="doCalc()">
+      <i class="ti ti-calculator" aria-hidden="true"></i>Calculate everything
+    </button>
+    <div id="err" style="display:none" class="err-box" role="alert"></div>
+  </div>
+
+  <div id="out">
+    <div>
+      <div class="section-title">Your age</div>
+      <div class="metrics-grid" id="main-cards"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="extras-grid" id="extra-cards"></div>
+    <div id="bday-row"></div>
+    <div class="divider"></div>
+    <div>
+      <div class="section-title">Zodiac details</div>
+      <div class="zodiac-hero" id="zodiac-hero"></div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="section-title">AI horoscope &amp; personality</div>
+      <div class="horo-card" id="horo-card">
+        <div class="horo-loading"><div class="horo-spin"></div>Generating your cosmic reading…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SIGNS=[
+  {n:'Capricorn',sym:'♑',el:'Earth',mod:'Cardinal',ru:'Saturn',date:'Dec 22–Jan 19',traits:['Disciplined','Ambitious','Practical','Patient'],compat:[{s:'♉',n:'Taurus',l:95},{s:'♍',n:'Virgo',l:90},{s:'♏',n:'Scorpio',l:85}]},
+  {n:'Aquarius',sym:'♒',el:'Air',mod:'Fixed',ru:'Uranus',date:'Jan 20–Feb 18',traits:['Innovative','Independent','Humanitarian','Eccentric'],compat:[{s:'♊',n:'Gemini',l:92},{s:'♎',n:'Libra',l:88},{s:'♐',n:'Sagittarius',l:83}]},
+  {n:'Pisces',sym:'♓',el:'Water',mod:'Mutable',ru:'Neptune',date:'Feb 19–Mar 20',traits:['Intuitive','Empathetic','Creative','Dreamy'],compat:[{s:'♋',n:'Cancer',l:94},{s:'♏',n:'Scorpio',l:90},{s:'♑',n:'Capricorn',l:82}]},
+  {n:'Aries',sym:'♈',el:'Fire',mod:'Cardinal',ru:'Mars',date:'Mar 21–Apr 19',traits:['Bold','Energetic','Courageous','Impulsive'],compat:[{s:'♌',n:'Leo',l:96},{s:'♐',n:'Sagittarius',l:91},{s:'♊',n:'Gemini',l:84}]},
+  {n:'Taurus',sym:'♉',el:'Earth',mod:'Fixed',ru:'Venus',date:'Apr 20–May 20',traits:['Reliable','Patient','Sensual','Stubborn'],compat:[{s:'♍',n:'Virgo',l:95},{s:'♑',n:'Capricorn',l:92},{s:'♋',n:'Cancer',l:87}]},
+  {n:'Gemini',sym:'♊',el:'Air',mod:'Mutable',ru:'Mercury',date:'May 21–Jun 20',traits:['Curious','Adaptable','Witty','Restless'],compat:[{s:'♎',n:'Libra',l:94},{s:'♒',n:'Aquarius',l:90},{s:'♈',n:'Aries',l:85}]},
+  {n:'Cancer',sym:'♋',el:'Water',mod:'Cardinal',ru:'Moon',date:'Jun 21–Jul 22',traits:['Nurturing','Intuitive','Protective','Moody'],compat:[{s:'♏',n:'Scorpio',l:96},{s:'♓',n:'Pisces',l:91},{s:'♉',n:'Taurus',l:87}]},
+  {n:'Leo',sym:'♌',el:'Fire',mod:'Fixed',ru:'Sun',date:'Jul 23–Aug 22',traits:['Charismatic','Creative','Generous','Proud'],compat:[{s:'♈',n:'Aries',l:95},{s:'♐',n:'Sagittarius',l:92},{s:'♊',n:'Gemini',l:85}]},
+  {n:'Virgo',sym:'♍',el:'Earth',mod:'Mutable',ru:'Mercury',date:'Aug 23–Sep 22',traits:['Analytical','Meticulous','Helpful','Critical'],compat:[{s:'♑',n:'Capricorn',l:94},{s:'♉',n:'Taurus',l:92},{s:'♋',n:'Cancer',l:86}]},
+  {n:'Libra',sym:'♎',el:'Air',mod:'Cardinal',ru:'Venus',date:'Sep 23–Oct 22',traits:['Diplomatic','Fair','Social','Indecisive'],compat:[{s:'♊',n:'Gemini',l:93},{s:'♒',n:'Aquarius',l:90},{s:'♌',n:'Leo',l:85}]},
+  {n:'Scorpio',sym:'♏',el:'Water',mod:'Fixed',ru:'Pluto',date:'Oct 23–Nov 21',traits:['Intense','Perceptive','Passionate','Secretive'],compat:[{s:'♋',n:'Cancer',l:97},{s:'♓',n:'Pisces',l:93},{s:'♑',n:'Capricorn',l:88}]},
+  {n:'Sagittarius',sym:'♐',el:'Fire',mod:'Mutable',ru:'Jupiter',date:'Nov 22–Dec 21',traits:['Adventurous','Optimistic','Philosophical','Blunt'],compat:[{s:'♈',n:'Aries',l:95},{s:'♌',n:'Leo',l:90},{s:'♒',n:'Aquarius',l:85}]}
+];
+const CHINESE=['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+const CH_SYM=['🐭','🐂','🐯','🐰','🐉','🐍','🐴','🐐','🐒','🐓','🐕','🐷'];
+const CH_TRAITS={Rat:'Clever, adaptable and charming with a sharp wit.',Ox:'Hardworking, reliable and determined with great endurance.',Tiger:'Brave, competitive and charismatic with magnetic energy.',Rabbit:'Kind, elegant and cautious with artistic sensibilities.',Dragon:'Ambitious, confident and gifted with natural leadership.',Snake:'Wise, intuitive and sophisticated with deep insight.',Horse:'Energetic, independent and free-spirited with enthusiasm.',Goat:'Creative, gentle and empathetic with artistic flair.',Monkey:'Clever, playful and innovative with quick thinking.',Rooster:'Observant, hardworking and courageous with precision.',Dog:'Loyal, honest and kind-hearted with a strong moral compass.',Pig:'Generous, compassionate and diligent with sincerity.'};
+const NAKSHATRA=[
+  {n:'Ashwini',ru:'Ketu',q:'Healing & swift beginnings'},{n:'Bharani',ru:'Venus',q:'Transformation & restraint'},{n:'Krittika',ru:'Sun',q:'Sharp & purifying energy'},{n:'Rohini',ru:'Moon',q:'Growth & creativity'},{n:'Mrigashira',ru:'Mars',q:'Seeking & searching'},{n:'Ardra',ru:'Rahu',q:'Renewal after storms'},{n:'Punarvasu',ru:'Jupiter',q:'Restoration & goodness'},{n:'Pushya',ru:'Saturn',q:'Nourishment & protection'},{n:'Ashlesha',ru:'Mercury',q:'Insight & mysticism'},{n:'Magha',ru:'Ketu',q:'Royalty & ancestors'},{n:'Purva Phalguni',ru:'Venus',q:'Pleasure & creativity'},{n:'Uttara Phalguni',ru:'Sun',q:'Prosperity & partnerships'},{n:'Hasta',ru:'Moon',q:'Skill & craftsmanship'},{n:'Chitra',ru:'Mars',q:'Brilliance & artistry'},{n:'Swati',ru:'Rahu',q:'Independence & flexibility'},{n:'Vishakha',ru:'Jupiter',q:'Ambition & purpose'},{n:'Anuradha',ru:'Saturn',q:'Devotion & friendship'},{n:'Jyeshtha',ru:'Mercury',q:'Seniority & courage'},{n:'Mula',ru:'Ketu',q:'Roots & transformation'},{n:'Purva Ashadha',ru:'Venus',q:'Victory & invincibility'},{n:'Uttara Ashadha',ru:'Sun',q:'Ultimate victory'},{n:'Shravana',ru:'Moon',q:'Listening & learning'},{n:'Dhanishtha',ru:'Mars',q:'Wealth & symphony'},{n:'Shatabhisha',ru:'Rahu',q:'Healing & mystery'},{n:'Purva Bhadrapada',ru:'Jupiter',q:'Transformation & passion'},{n:'Uttara Bhadrapada',ru:'Saturn',q:'Depth & compassion'},{n:'Revati',ru:'Mercury',q:'Journey & nourishment'}
+];
+const STONES={Aries:{stone:'Diamond',color:'#E8E8F0',alt:'Bloodstone'},Taurus:{stone:'Emerald',color:'#2D7A4F',alt:'Rose Quartz'},Gemini:{stone:'Pearl',color:'#E8E4DC',alt:'Moonstone'},Cancer:{stone:'Ruby',color:'#9B2335',alt:'Carnelian'},Leo:{stone:'Peridot',color:'#8DB600',alt:'Onyx'},Virgo:{stone:'Sapphire',color:'#1B3A8C',alt:'Carnelian'},Libra:{stone:'Opal',color:'#A8C5DA',alt:'Tourmaline'},Scorpio:{stone:'Topaz',color:'#FFC87C',alt:'Citrine'},Sagittarius:{stone:'Turquoise',color:'#40E0D0',alt:'Blue Topaz'},Capricorn:{stone:'Garnet',color:'#6B2737',alt:'Black Tourmaline'},Aquarius:{stone:'Amethyst',color:'#9B59B6',alt:'Garnet'},Pisces:{stone:'Aquamarine',color:'#7FFFD4',alt:'Jade'}};
+const LUCK_COLORS={Aries:['Red','Orange','White'],Taurus:['Green','Pink','White'],Gemini:['Yellow','Green','Orange'],Cancer:['White','Silver','Blue'],Leo:['Gold','Orange','Red'],Virgo:['Green','White','Grey'],Libra:['Pink','Blue','White'],Scorpio:['Maroon','Black','Crimson'],Sagittarius:['Purple','Blue','Yellow'],Capricorn:['Brown','Grey','Black'],Aquarius:['Blue','Violet','White'],Pisces:['Sea Green','Lavender','White']};
+const LUCK_NUMS={Aries:[1,9,8],Taurus:[2,6,9],Gemini:[3,5,7],Cancer:[2,7,11],Leo:[1,5,9],Virgo:[3,5,8],Libra:[4,6,13],Scorpio:[2,4,9],Sagittarius:[3,7,12],Capricorn:[4,8,13],Aquarius:[4,7,11],Pisces:[3,7,12]};
+
+function getWestern(mo,da){
+  if((mo===12&&da>=22)||(mo===1&&da<=19))return SIGNS[0];
+  if((mo===1&&da>=20)||(mo===2&&da<=18))return SIGNS[1];
+  if((mo===2&&da>=19)||(mo===3&&da<=20))return SIGNS[2];
+  if((mo===3&&da>=21)||(mo===4&&da<=19))return SIGNS[3];
+  if((mo===4&&da>=20)||(mo===5&&da<=20))return SIGNS[4];
+  if((mo===5&&da>=21)||(mo===6&&da<=20))return SIGNS[5];
+  if((mo===6&&da>=21)||(mo===7&&da<=22))return SIGNS[6];
+  if((mo===7&&da>=23)||(mo===8&&da<=22))return SIGNS[7];
+  if((mo===8&&da>=23)||(mo===9&&da<=22))return SIGNS[8];
+  if((mo===9&&da>=23)||(mo===10&&da<=22))return SIGNS[9];
+  if((mo===10&&da>=23)||(mo===11&&da<=21))return SIGNS[10];
+  return SIGNS[11];
+}
+function getChinese(yr){const idx=(yr-1900)%12;return{animal:CHINESE[idx],sym:CH_SYM[idx],trait:CH_TRAITS[CHINESE[idx]]};}
+function getNakshatra(mo,da,yr){const doy=Math.floor((new Date(yr,mo-1,da)-new Date(yr,0,0))/86400000);return NAKSHATRA[Math.floor((doy/365)*27)%27];}
+function isLeap(y){return(y%4===0&&y%100!==0)||y%400===0;}
+function dim(mo,yr){return[0,31,isLeap(yr)?29:28,31,30,31,30,31,31,30,31,30,31][mo];}
+function ordinal(n){const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+function mname(m){return['January','February','March','April','May','June','July','August','September','October','November','December'][m-1];}
+function dow(y,m,d){return['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date(y,m-1,d).getDay()];}
+
+function doCalc(){
+  const da=parseInt(document.getElementById('d').value),mo=parseInt(document.getElementById('m').value),yr=parseInt(document.getElementById('y').value);
+  const errBox=document.getElementById('err'),out=document.getElementById('out');
+  errBox.style.display='none';
+  ['d','m','y'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  let err='';
+  if(!document.getElementById('d').value||!document.getElementById('m').value||!document.getElementById('y').value){
+    err='Please fill in day, month and year.';
+    ['d','m','y'].forEach(id=>{if(!document.getElementById(id).value)document.getElementById(id).classList.add('err');});
+  } else if(isNaN(da)||isNaN(mo)||isNaN(yr)){
+    err='Please enter valid numeric values.';
+  } else if(mo<1||mo>12){
+    err='Month must be between 1 and 12.';document.getElementById('m').classList.add('err');
+  } else if(da<1||da>dim(mo,yr)){
+    err=`Day must be between 1 and ${dim(mo,yr)} for ${mname(mo)} ${yr}.`;document.getElementById('d').classList.add('err');
+  } else if(yr<1900||yr>2099){
+    err='Year must be between 1900 and 2099.';document.getElementById('y').classList.add('err');
+  } else {
+    const dob=new Date(yr,mo-1,da),now=new Date();
+    if(dob>now){err='Date of birth cannot be in the future.';['d','m','y'].forEach(id=>document.getElementById(id).classList.add('err'));}
+  }
+  if(err){errBox.textContent=err;errBox.style.display='block';out.classList.remove('visible');return;}
+  renderAll(da,mo,yr);
+}
+
+function renderAll(da,mo,yr){
+  const now=new Date();
+  const dob=new Date(yr,mo-1,da);
+  let years=now.getFullYear()-yr,months=now.getMonth()-(mo-1),days=now.getDate()-da;
+  if(days<0){months--;days+=new Date(now.getFullYear(),now.getMonth(),0).getDate();}
+  if(months<0){years--;months+=12;}
+  const totalDays=Math.floor((now-dob)/86400000);
+  const totalWeeks=Math.floor(totalDays/7);
+  const totalMonths=years*12+months;
+  const totalHrs=totalDays*24;
+  const nextBday=new Date(now.getFullYear(),mo-1,da);
+  if(nextBday<=now)nextBday.setFullYear(now.getFullYear()+1);
+  const daysToNext=Math.ceil((nextBday-now)/86400000);
+  const isToday=(now.getDate()===da&&(now.getMonth()+1)===mo);
+
+  document.getElementById('main-cards').innerHTML=`
+    <div class="mc"><span class="ml">Years</span><div class="mv">${years}</div><span class="ms">&nbsp;</span></div>
+    <div class="mc"><span class="ml">Months</span><div class="mv">${months}</div><span class="ms">this year</span></div>
+    <div class="mc"><span class="ml">Days</span><div class="mv">${days}</div><span class="ms">this month</span></div>`;
+
+  document.getElementById('extra-cards').innerHTML=`
+    <div class="ec"><div class="ec-icon"><i class="ti ti-calendar" aria-hidden="true"></i></div><div class="ec-info"><span class="ec-lbl">Total days</span><span class="ec-val">${totalDays.toLocaleString()}</span></div></div>
+    <div class="ec"><div class="ec-icon"><i class="ti ti-stack" aria-hidden="true"></i></div><div class="ec-info"><span class="ec-lbl">Total weeks</span><span class="ec-val">${totalWeeks.toLocaleString()}</span></div></div>
+    <div class="ec"><div class="ec-icon"><i class="ti ti-columns" aria-hidden="true"></i></div><div class="ec-info"><span class="ec-lbl">Total months</span><span class="ec-val">${totalMonths.toLocaleString()}</span></div></div>
+    <div class="ec"><div class="ec-icon"><i class="ti ti-clock" aria-hidden="true"></i></div><div class="ec-info"><span class="ec-lbl">Total hours</span><span class="ec-val">${totalHrs.toLocaleString()}</span></div></div>
+    <div class="ec"><div class="ec-icon"><i class="ti ti-sun" aria-hidden="true"></i></div><div class="ec-info"><span class="ec-lbl">Born on a</span><span class="ec-val">${dow(yr,mo,da)}</span></div></div>
+    <div class="ec"><div class="ec-icon"><i class="ti ti-user" aria-hidden="true"></i></div><div class="ec-info"><span class="ec-lbl">Current age</span><span class="ec-val">${years} yrs, ${months} mo</span></div></div>`;
+
+  document.getElementById('bday-row').innerHTML=isToday
+    ?`<div class="bday-badge"><i class="ti ti-confetti" aria-hidden="true"></i>Happy Birthday! You turn ${years} today.</div>`
+    :`<div class="bday-bar"><div><span class="bday-lbl">Next birthday</span><div class="bday-val">${ordinal(da)} ${mname(mo)} ${nextBday.getFullYear()}</div></div><div class="bday-count">${daysToNext}<span>days away</span></div></div>`;
+
+  const ws=getWestern(mo,da);
+  const ch=getChinese(yr);
+  const nak=getNakshatra(mo,da,yr);
+  const st=STONES[ws.n];
+  const lc=LUCK_COLORS[ws.n];
+  const ln=LUCK_NUMS[ws.n];
+
+  document.getElementById('zodiac-hero').innerHTML=`
+    <div class="zh-top">
+      <div class="zh-sym">${ws.sym}</div>
+      <div class="zh-info">
+        <h3>${ws.n}</h3>
+        <p>${ws.date} &middot; ${ws.el} &middot; ${ws.mod} &middot; Ruled by ${ws.ru}</p>
+        <div class="zh-pills">${ws.traits.map(t=>`<span class="pill">${t}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="zh-grid">
+      <div class="zh-card"><div class="zh-card-lbl">Chinese zodiac</div><div class="zh-card-val">${ch.sym} ${ch.animal} (${yr})</div><div class="zh-card-sub">${ch.trait}</div></div>
+      <div class="zh-card"><div class="zh-card-lbl">Vedic nakshatra</div><div class="zh-card-val">${nak.n}</div><div class="zh-card-sub">Ruler: ${nak.ru} &middot; ${nak.q}</div></div>
+    </div>
+    <div class="stone-row">
+      <div class="stone-dot" style="background:${st.color};border:1px solid rgba(0,0,0,.2)"></div>
+      <span class="stone-text">Birthstone: <strong>${st.stone}</strong></span>
+      <span class="stone-sub">&middot; Alternate: ${st.alt}</span>
+    </div>
+    <div class="luck-row">
+      <div class="luck-card"><div class="luck-lbl">Lucky colors</div><div class="luck-vals">${lc.map(c=>`<span class="luck-pill">${c}</span>`).join('')}</div></div>
+      <div class="luck-card"><div class="luck-lbl">Lucky numbers</div><div class="luck-vals">${ln.map(n=>`<span class="luck-pill">${n}</span>`).join('')}</div></div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="zh-card-lbl" style="margin-bottom:8px">Love compatibility</div>
+      <div class="compat-grid">${ws.compat.map(c=>`
+        <div class="compat-item">
+          <div class="compat-sign">${c.s}</div>
+          <div class="compat-name">${c.n}</div>
+          <div class="compat-level">${c.l}% match</div>
+          <div class="compat-bar"><div class="compat-fill" style="width:${c.l}%"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+  const out=document.getElementById('out');
+  out.classList.remove('visible');
+  void out.offsetWidth;
+  out.classList.add('visible');
+
+  fetchHoroscope(ws,ch,nak,years);
+}
+
+async function fetchHoroscope(ws,ch,nak,age){
+  const hc=document.getElementById('horo-card');
+  hc.innerHTML='<div class="horo-loading"><div class="horo-spin"></div>Generating your cosmic reading…</div>';
+
+  // -------------------------------------------------------
+  // PASTE YOUR GROQ API KEY BELOW (from console.groq.com)
+  const API_KEY = "YOUR_GROQ_API_KEY";
+  // -------------------------------------------------------
+
+  try{
+    const prompt=`You are a professional astrologer and psychologist. The user is ${age} years old, Western sign: ${ws.n} (${ws.el}, ${ws.mod}, ruled by ${ws.ru}), Chinese zodiac: ${ch.animal}, Vedic Nakshatra: ${nak.n} (ruled by ${nak.ru}).
+
+Write a rich, personalised cosmic reading with exactly these four sections. Use plain text only, no markdown, no asterisks, no bullet points.
+
+DAILY_HOROSCOPE: (2-3 sentences of today's horoscope for ${ws.n}, specific and insightful)
+
+PERSONALITY: (3-4 sentences blending Western, Chinese and Vedic insights. Be specific and avoid generic statements.)
+
+LOVE: (2-3 sentences about their love style and romantic tendencies.)
+
+STRENGTHS: (2 sentences about their core strengths and life purpose.)
+
+Return ONLY these four labelled sections. No intro or outro.`;
+
+    const res=await fetch(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':`Bearer ${GROQ_API_KEY}`
+        },
+        body:JSON.stringify({
+          model:'llama-3.3-70b-versatile',
+          max_tokens:1024,
+          messages:[
+            {role:'system',content:'You are a professional astrologer and psychologist who writes rich, personalised cosmic readings.'},
+            {role:'user',content:prompt}
+          ]
+        })
+      }
+    );
+    const data=await res.json();
+    if(data.error){throw new Error(data.error.message);}
+    const raw=data.choices?.[0]?.message?.content||'';
+    const get=(label)=>{const rx=new RegExp(label+':\\s*([\\s\\S]*?)(?=(?:DAILY_HOROSCOPE|PERSONALITY|LOVE|STRENGTHS):|$)');const m=raw.match(rx);return m?m[1].trim():'';};
+    const daily=get('DAILY_HOROSCOPE'),pers=get('PERSONALITY'),love=get('LOVE'),str=get('STRENGTHS');
+    if(!daily&&!pers){throw new Error('Empty response');}
+    hc.innerHTML=`
+      <div class="horo-section"><div class="horo-sec-lbl"><i class="ti ti-sun" aria-hidden="true"></i>Today's horoscope</div><div class="horo-text">${daily}</div></div>
+      <div class="divider"></div>
+      <div class="horo-section"><div class="horo-sec-lbl"><i class="ti ti-user" aria-hidden="true"></i>Personality</div><div class="horo-text">${pers}</div></div>
+      <div class="divider"></div>
+      <div class="horo-section"><div class="horo-sec-lbl"><i class="ti ti-heart" aria-hidden="true"></i>Love & relationships</div><div class="horo-text">${love}</div></div>
+      <div class="divider"></div>
+      <div class="horo-section"><div class="horo-sec-lbl"><i class="ti ti-star" aria-hidden="true"></i>Strengths & purpose</div><div class="horo-text">${str}</div></div>`;
+  }catch(e){
+    hc.innerHTML=`<div class="horo-text" style="color:var(--color-text-secondary)">Could not load horoscope: ${e.message}. Check your Groq API key and try again.</div>`;
+  }
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doCalc();});
+</script>
+</body>
+</html>
