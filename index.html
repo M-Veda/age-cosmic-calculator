@@ -376,10 +376,7 @@ async function fetchHoroscope(ws,ch,nak,age){
   const hc=document.getElementById('horo-card');
   hc.innerHTML='<div class="horo-loading"><div class="horo-spin"></div>Generating your cosmic reading…</div>';
 
-  // -------------------------------------------------------
-  // PASTE YOUR GROQ API KEY BELOW (from console.groq.com)
-  const API_KEY = "YOUR_GROQ_API_KEY";
-  // -------------------------------------------------------
+  const GROQ_API_KEY = "YOUR_GROQ_API_KEY";
 
   try{
     const prompt=`You are a professional astrologer and psychologist. The user is ${age} years old, Western sign: ${ws.n} (${ws.el}, ${ws.mod}, ruled by ${ws.ru}), Chinese zodiac: ${ch.animal}, Vedic Nakshatra: ${nak.n} (ruled by ${nak.ru}).
