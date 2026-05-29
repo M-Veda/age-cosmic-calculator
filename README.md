@@ -38,11 +38,27 @@ An AI-powered web application that combines advanced age analytics with astrolog
 - Personalized interpretations
 
 ### 🎨 Premium UI/UX
-- Fully responsive design
-- Dark/Light mode adaptation
-- Animated interface components
-- Modern responsive layout
-- Mobile-friendly interface
+
+* Fully responsive design
+* Animated interface components
+* Modern responsive layout
+* Mobile-friendly interface
+* Clean and immersive cosmic-themed interface
+
+---
+
+## 🎥 Demo Preview
+
+https://github.com/user-attachments/assets/035c96e2-08e1-45fa-aa0c-944573fc717c
+
+### 🚀 What the Demo Covers
+
+* Real-time age analytics
+* Zodiac & cosmic insights
+* Compatibility analysis system
+* AI-generated horoscope features
+* Interactive responsive UI
+* Smooth user experience and animations
 
 ---
 
@@ -72,22 +88,22 @@ An AI-powered web application that combines advanced age analytics with astrolog
 ## 📸 Screenshots
 
 ### 🏠 Home Interface
-<img width="100%" alt="Home Interface" src="assets/home-interface.png">
+<img width="813" height="388" alt="image" src="https://github.com/user-attachments/assets/a9145966-36bd-415c-b454-161a58c66bbf" />
 
 ---
 
 ### 📊 Age Analytics Dashboard
-<img width="100%" alt="Age Dashboard" src="assets/age-dashboard.png">
+<img width="757" height="876" alt="image" src="https://github.com/user-attachments/assets/0b0df96b-da7a-4c54-8ee5-1395b849dd8b" />
 
 ---
 
 ### 🔮 Zodiac & Compatibility Insights
-<img width="100%" alt="Zodiac Details" src="assets/zodiac-details.png">
+<img width="728" height="590" alt="image" src="https://github.com/user-attachments/assets/bf1d203a-fcb9-4103-852b-019ffa77e2c9" />
 
 ---
 
 ### 🤖 AI Horoscope & Personality Analysis
-<img width="100%" alt="AI Horoscope" src="assets/ai-horoscope.png">
+<img width="728" height="894" alt="image" src="https://github.com/user-attachments/assets/4f32c513-1e48-4f27-a2db-71f27cf24f09" />
 
 ---
 
